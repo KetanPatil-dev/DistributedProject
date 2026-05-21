@@ -1,0 +1,466 @@
+
+============================================================
+  DTU DRTS Mini Project 1 — DM vs EDF Analysis
+============================================================
+
+
+============================================================
+  HAND-CRAFTED EXAMPLE TASK SETS
+============================================================
+
+  ────────────────────────────────────────────────────────
+  Example 1: Both DM and EDF schedulable (implicit deadlines)
+  U = 0.8333
+  ────────────────────────────────────────────────────────
+
+  Task        C      T      D    B
+  ------------------------------
+  tau_1       1      4      4    1
+  tau_2       2      6      6    1
+  tau_3       3     12     12    2
+
+  DM RTA Step-by-Step (tasks sorted by deadline):
+  Task          C      T      D  Iterations
+  ------------------------------------------------------------
+  tau_1         1      4      4  1 -> 1  [R=1]
+  tau_2         2      6      6  2 -> 3 -> 3  [R=3]
+  tau_3         3     12     12  3 -> 6 -> 7 -> 9 -> 10 -> 10  [R=10]
+
+  DM Result: SCHEDULABLE
+    tau_1: WCRT = 1, Deadline = 4, Slack = 3
+    tau_2: WCRT = 3, Deadline = 6, Slack = 3
+    tau_3: WCRT = 10, Deadline = 12, Slack = 2
+
+  EDF PDC Step-by-Step:
+  Total utilization U = 0.8333
+  Implicit deadlines (D=T for all tasks)
+  U <= 1.0 => SCHEDULABLE
+
+  EDF WCRT Analytical (Hyperperiod Construction):
+  Hyperperiod H = 12
+  Total jobs in [0, H): 6
+  EDF WCRT Result: SCHEDULABLE
+    tau_1: WCRT = 2, Deadline = 4, Slack = 2
+    tau_2: WCRT = 3, Deadline = 6, Slack = 3
+    tau_3: WCRT = 7, Deadline = 12, Slack = 5
+
+  Simulation Results (random [BCET, WCET]):
+
+  Task        DM WCRT   EDF WCRT   DM Sim RT   EDF Sim RT   DM Miss   EDF Miss
+  ---------------------------------------------------------------------------
+  tau_1             1          2         1.0          1.5         0          0
+  tau_2             3          3         3.0          3.0         0          0
+  tau_3            10          7         9.5          6.8         0          0
+  Gantt chart saved.
+
+  ────────────────────────────────────────────────────────
+  Example 2: Only EDF schedulable (constrained deadlines)
+  U = 0.8857
+  ────────────────────────────────────────────────────────
+
+  Task        C      T      D    B
+  ------------------------------
+  tau_1       2      5      4    1
+  tau_2       2      7      5    1
+  tau_3       2     10      7    1
+
+  DM RTA Step-by-Step (tasks sorted by deadline):
+  Task          C      T      D  Iterations
+  ------------------------------------------------------------
+  tau_1         2      5      4  2 -> 2  [R=2]
+  tau_2         2      7      5  2 -> 4 -> 4  [R=4]
+  tau_3         2     10      7  2 -> 6 -> 8  [MISS]
+
+  DM Result: NOT SCHEDULABLE
+
+  EDF PDC Step-by-Step:
+  Total utilization U = 0.8857
+  Constrained deadlines detected (D < T for some tasks)
+  Computing demand bound function dbf(L) at deadline points...
+  L* = 13.7
+  Testing up to L_max = 13.7
+  Number of test points: 5
+  Checked 5 points, worst ratio dbf(L)/L = 0.8889 at L=9.0
+  All points satisfy dbf(L) <= L => SCHEDULABLE
+
+  EDF WCRT Analytical (Hyperperiod Construction):
+  Hyperperiod H = 70
+  Total jobs in [0, H): 31
+  EDF WCRT Result: SCHEDULABLE
+    tau_1: WCRT = 3, Deadline = 4, Slack = 1
+    tau_2: WCRT = 4, Deadline = 5, Slack = 1
+    tau_3: WCRT = 6, Deadline = 7, Slack = 1
+
+  Simulation Results (random [BCET, WCET]):
+
+  Task        DM WCRT   EDF WCRT   DM Sim RT   EDF Sim RT   DM Miss   EDF Miss
+  ---------------------------------------------------------------------------
+  tau_1           N/A          3         2.0          2.5         0          0
+  tau_2           N/A          4         3.5          3.5         0          0
+  tau_3           N/A          6         6.9          5.2         0          0
+  Gantt chart saved.
+
+  ────────────────────────────────────────────────────────
+  Example 3: Neither schedulable (overloaded)
+  U = 1.4286
+  ────────────────────────────────────────────────────────
+
+  Task        C      T      D    B
+  ------------------------------
+  tau_1       3      5      5    2
+  tau_2       3      7      6    2
+  tau_3       4     10      9    3
+
+  DM RTA Step-by-Step (tasks sorted by deadline):
+  Task          C      T      D  Iterations
+  ------------------------------------------------------------
+  tau_1         3      5      5  3 -> 3  [R=3]
+  tau_2         3      7      6  3 -> 6 -> 9  [MISS]
+
+  DM Result: NOT SCHEDULABLE
+
+  EDF PDC Step-by-Step:
+  Total utilization U = 1.4286
+  U > 1.0 => NOT schedulable (necessary condition fails)
+
+============================================================
+  VERIFICATION AGAINST KNOWN TEST CASES
+============================================================
+
+  [schedulable/] — expected: DM=YES, EDF=YES
+  File                                                     U     DM    EDF    OK
+  ---------------------------------------------------------------------------
+  Full_Utilization_NonUnique_Periods                    1.00    YES    YES  PASS
+  Full_Utilization_Unique_Periods_LargeHP               1.00    YES    YES  PASS
+  Full_Utilization_Unique_Periods                       1.00    YES    YES  PASS
+  High_Utilization_NonUnique_Periods                    0.80    YES    YES  PASS
+  High_Utilization_Unique_Periods_LargeHP               0.80    YES    YES  PASS
+  High_Utilization_Unique_Periods                       0.80    YES    YES  PASS
+  Low_Utilization_NonUnique_Periods                     0.20    YES    YES  PASS
+  Low_Utilization_Unique_Periods_LargeHP                0.20    YES    YES  PASS
+  Low_Utilization_Unique_Periods                        0.20    YES    YES  PASS
+  Medium_Utilization_NonUnique_Periods                  0.50    YES    YES  PASS
+  Medium_Utilization_Unique_Periods_LargeHP             0.50    YES    YES  PASS
+  Medium_Utilization_Unique_Periods                     0.50    YES    YES  PASS
+
+  [not_schedulable/] — expected: DM=NO, EDF=YES (except Full_NonUnique)
+  File                                                     U     DM    EDF    OK
+  ---------------------------------------------------------------------------
+  Unschedulable_Full_Utilization_NonUnique_Periods      1.00     NO     NO  PASS
+  Unschedulable_Full_Utilization_Unique_Periods         1.00     NO    YES  PASS
+  Unschedulable_High_Utilization_NonUnique_Periods      0.85     NO    YES  PASS
+  Unschedulable_High_Utilization_Unique_Periods         0.87     NO    YES  PASS
+
+  Result: 16/16 test cases passed
+  All test cases passed — implementation verified!
+
+============================================================
+  VERIFICATION AGAINST PROVIDED SOLUTIONS
+============================================================
+
+============================================================
+  CUSTOM GENERATED TEST CASES ANALYSIS
+============================================================
+
+  Name                                  n      U    DM   EDF  DM Sim  EDF Sim
+  ------------------------------------------------------------------------
+  Custom_10task_constrained            10  0.984    NO   YES 9325 miss       OK
+  Custom_10task_full                   10  1.000   YES   YES      OK       OK
+  Custom_10task_high                   10  0.850   YES   YES      OK       OK
+  Custom_10task_low                    10  0.300   YES   YES      OK       OK
+  Custom_10task_med                    10  0.600   YES   YES      OK       OK
+  Custom_15task_full                   15  1.000   YES   YES      OK       OK
+  Custom_15task_high                   15  0.800   YES   YES      OK       OK
+  Custom_15task_med                    15  0.500   YES   YES      OK       OK
+  Custom_20task_high                   20  0.900   YES   YES      OK       OK
+  Custom_20task_med                    20  0.600   YES   YES      OK       OK
+  Custom_5task_constrained              5  0.916    NO   YES 300 miss       OK
+  Custom_5task_high                     5  0.850   YES   YES      OK       OK
+  Custom_5task_low                      5  0.300   YES   YES      OK       OK
+  Custom_5task_med                      5  0.600   YES   YES      OK       OK
+  Custom_6task_constrained              6  0.894    NO   YES 200 miss       OK
+
+  Result: 15/15 custom test cases — analytical matches simulation
+
+============================================================
+  Dataset: automotive
+  Path:    /Users/bigdaddyketan/Desktop/output/automotive-utilDist/automotive-perDist/1-core/25-task/0-jitter
+============================================================
+  Found 1000 task set files.
+
+  Summary over 1000 task sets:
+    DM  schedulable :   841  (84.1%)
+    EDF schedulable :   841  (84.1%)
+    EDF wins        :     0  (EDF ok, DM not ok)
+
+    Util   #Sets      DM%     EDF%
+  --------------------------------
+     0.0       4   100.0%   100.0%
+     0.1     128   100.0%   100.0%
+     0.2      78   100.0%   100.0%
+     0.3      93   100.0%   100.0%
+     0.4     110   100.0%   100.0%
+     0.5      98   100.0%   100.0%
+     0.6      79   100.0%   100.0%
+     0.7      73   100.0%   100.0%
+     0.8      72   100.0%   100.0%
+     0.9      77   100.0%   100.0%
+     1.0      64    45.3%    45.3%
+     1.1      57     0.0%     0.0%
+     1.2      27     0.0%     0.0%
+     1.3      15     0.0%     0.0%
+     1.4      15     0.0%     0.0%
+     1.5       4     0.0%     0.0%
+     1.6       3     0.0%     0.0%
+     1.7       1     0.0%     0.0%
+     1.8       1     0.0%     0.0%
+     1.9       1     0.0%     0.0%
+  Plot saved.
+  Plot saved.
+  Skipping EDF wins plot for automotive (no EDF wins — implicit deadlines)
+
+============================================================
+  Dataset: uunifast
+  Path:    /Users/bigdaddyketan/Desktop/output/uunifast-utilDist/uniform-discrete-perDist/1-core/25-task/0-jitter
+============================================================
+  Found 1000 task set files.
+
+  Summary over 1000 task sets:
+    DM  schedulable :   856  (85.6%)
+    EDF schedulable :  1000  (100.0%)
+    EDF wins        :   144  (EDF ok, DM not ok)
+
+    Util   #Sets      DM%     EDF%
+  --------------------------------
+     0.1     100   100.0%   100.0%
+     0.2     100   100.0%   100.0%
+     0.3     100   100.0%   100.0%
+     0.4     100   100.0%   100.0%
+     0.5     100   100.0%   100.0%
+     0.6     100   100.0%   100.0%
+     0.7     100   100.0%   100.0%
+     0.8     100   100.0%   100.0%
+     0.9     100    56.0%   100.0%
+     1.0     100     0.0%   100.0%
+  Plot saved.
+  Plot saved.
+  Plot saved.
+  Combined plot saved.
+
+============================================================
+  DETAILED SIMULATION REPORT: automotive
+============================================================
+
+  Task set: n=32, U=0.699, Hyperperiod=1000000
+  DM analytical: SCHEDULABLE
+  EDF analytical (PDC): SCHEDULABLE
+  EDF analytical (WCRT): SCHEDULABLE
+  DM simulation (WCET):   0 deadline misses
+  EDF simulation (WCET):  0 deadline misses
+  DM simulation (random): 0 deadline misses
+  EDF simulation (random):0 deadline misses
+
+  Per-task comparison (WCET execution):
+  Task        C       T       D   DM WCRT   EDF WCRT   DM Sim   EDF Sim   Jobs  DM Miss  EDF Miss
+  -----------------------------------------------------------------------------------------------
+  tau_1    1030   10000   10000      1030       1030   1030.0    1030.0    200        0         0
+  tau_2    1270   10000   10000      2300       2300   2300.0    2300.0    200        0         0
+  tau_3     770   10000   10000      3070       3070   3070.0    3070.0    200        0         0
+  tau_4     790   20000   20000      3860       3860   3860.0    3860.0    100        0         0
+  tau_5     959   50000   50000      4819       4819   4819.0    4819.0     40        0         0
+  tau_6     540  100000  100000      5359       5359   5359.0    5359.0     20        0         0
+  tau_7    2050  100000  100000      7409       7409   7409.0    7409.0     20        0         0
+  tau_8    2230  100000  100000      9639       9639   9639.0    9639.0     20        0         0
+  tau_9    1580  100000  100000     14289      14289  14289.0   14289.0     20        0         0
+  tau_10   3660  100000  100000     17949      17949  17949.0   17949.0     20        0         0
+  tau_11   2000  100000  100000     19949      19949  19949.0   19949.0     20        0         0
+  tau_12   2040  100000  100000     25849      25849  25849.0   25849.0     20        0         0
+  tau_13   3040  100000  100000     28889      28889  28889.0   28889.0     20        0         0
+  tau_14   1750  100000  100000     33709      33709  33709.0   33709.0     20        0         0
+  tau_15   4820  100000  100000     38529      38529  38529.0   38529.0     20        0         0
+  tau_16   1810  100000  100000     44199      44199  44199.0   44199.0     20        0         0
+  tau_17   2630  100000  100000     46829      46829  46829.0   46829.0     20        0         0
+  tau_18   2060  100000  100000     48889      48889  48889.0   48889.0     20        0         0
+  tau_19   1470  100000  100000     54388      54388  54388.0   54388.0     20        0         0
+  tau_20    180  200000  200000     54568      54568  54568.0   54568.0     10        0         0
+  tau_21    920  500000  500000     55488      55488  55488.0   55488.0      4        0         0
+  tau_22    290  500000  500000     55778      55778  55778.0   55778.0      4        0         0
+  tau_23   1620  500000  500000     57398      57398  57398.0   57398.0      4        0         0
+  tau_24   1710 1000000 1000000     59108      59108  59108.0   59108.0      2        0         0
+  tau_25    540 1000000 1000000     59648      59648  59648.0   59648.0      2        0         0
+  tau_26   2780 1000000 1000000     66288      66288  66288.0   66288.0      2        0         0
+  tau_27   1199 1000000 1000000     67487      67487  67487.0   67487.0      2        0         0
+  tau_28    599 1000000 1000000     68086      68086  68086.0   68086.0      2        0         0
+  tau_29   1510 1000000 1000000     69596      69596  69596.0   69596.0      2        0         0
+  tau_30    850 1000000 1000000     73516      73516  73516.0   73516.0      2        0         0
+  tau_31    630 1000000 1000000     74146      74146  74146.0   74146.0      2        0         0
+  tau_32    320 1000000 1000000     74466      74466  74466.0   74466.0      2        0         0
+
+  VERIFIED: All DM simulated response times <= theoretical WCRTs
+
+  VERIFIED: All EDF simulated response times <= EDF analytical WCRTs
+
+============================================================
+  DETAILED SIMULATION REPORT: uunifast
+============================================================
+
+  Task set: n=25, U=0.700, Hyperperiod=1200000
+  DM analytical: SCHEDULABLE
+  EDF analytical (PDC): SCHEDULABLE
+  EDF analytical (WCRT): SCHEDULABLE
+  DM simulation (WCET):   0 deadline misses
+  EDF simulation (WCET):  0 deadline misses
+  DM simulation (random): 0 deadline misses
+  EDF simulation (random):0 deadline misses
+
+  Per-task comparison (WCET execution):
+  Task        C       T       D   DM WCRT   EDF WCRT   DM Sim   EDF Sim   Jobs  DM Miss  EDF Miss
+  -----------------------------------------------------------------------------------------------
+  tau_1      18   20000   20000        18         18     18.0      18.0    100        0         0
+  tau_2     414   20000   20000       432        432    432.0     432.0    100        0         0
+  tau_3     258   20000   20000       690        690    690.0     690.0    100        0         0
+  tau_4     769   20000   20000      1459       1459   1459.0    1459.0    100        0         0
+  tau_5     141   20000   20000      1600       1600   1600.0    1600.0    100        0         0
+  tau_6    2239   30000   30000      3839       3839   3839.0    3839.0     67        0         0
+  tau_7    1812   30000   30000      5651       5651   5651.0    5651.0     67        0         0
+  tau_8     774   30000   30000      6425       6425   6425.0    6425.0     67        0         0
+  tau_9      49   40000   40000      6474       6474   6474.0    6474.0     50        0         0
+  tau_10    377   40000   40000      6851       6851   6851.0    6851.0     50        0         0
+  tau_11   2692   40000   40000      9543       9543   9543.0    9543.0     50        0         0
+  tau_12     46   40000   40000      9589       9589   9589.0    9589.0     50        0         0
+  tau_13    691   40000   40000     10280      10280  10280.0   10280.0     50        0         0
+  tau_14   4823   50000   50000     15103      15103  15103.0   15103.0     40        0         0
+  tau_15   1010   60000   60000     16113      16113  16113.0   16113.0     34        0         0
+  tau_16    897   60000   60000     17010      17010  17010.0   17010.0     34        0         0
+  tau_17    482   60000   60000     17492      17492  17492.0   17492.0     34        0         0
+  tau_18   2362   80000   80000     19854      19854  19854.0   19854.0     25        0         0
+  tau_19   7163   80000   80000     28617      28617  28617.0   28617.0     25        0         0
+  tau_20   3069   80000   80000     36511      36511  36511.0   36511.0     25        0         0
+  tau_21   1866   80000   80000     38377      38377  38377.0   38377.0     25        0         0
+  tau_22    583   80000   80000     38960      38960  38960.0   38960.0     25        0         0
+  tau_23    432   80000   80000     39392      39392  39392.0   39392.0     25        0         0
+  tau_24     82   80000   80000     39474      39474  39474.0   39474.0     25        0         0
+  tau_25   2544   80000   80000     47473      47473  47473.0   47473.0     25        0         0
+
+  VERIFIED: All DM simulated response times <= theoretical WCRTs
+
+  VERIFIED: All EDF simulated response times <= EDF analytical WCRTs
+
+  Simulation validation for automotive (target U≈0.7) ...
+  Task set: U=0.699, n=32, Hyperperiod=1000000
+  DM analytical: schedulable
+  EDF analytical WCRT: schedulable
+  DM simulation: 0 misses
+  EDF simulation: 0 misses
+  Plot saved.
+  Plot saved.
+
+  Simulation validation for uunifast (target U≈0.7) ...
+  Task set: U=0.700, n=25, Hyperperiod=1200000
+  DM analytical: schedulable
+  EDF analytical WCRT: schedulable
+  DM simulation: 0 misses
+  EDF simulation: 0 misses
+  Plot saved.
+  Plot saved.
+
+  Schedulability validation (analytical vs simulation) for automotive ...
+  Checked 30 task sets: 30/30 analytical-simulation agreements
+  Plot saved.
+
+  Schedulability validation (analytical vs simulation) for uunifast ...
+  Checked 30 task sets: 27/30 analytical-simulation agreements
+
+  DISAGREEMENTS (3 cases):
+       U   DM Anal   DM Sim   EDF Anal   EDF Sim  Explanation
+  ---------------------------------------------------------------------------
+   1.000        NO      YES        YES       YES  Anal=unsched, Sim=no miss → sim duration may be too short
+         File: uniform-discrete_0.csv
+   1.000        NO      YES        YES       YES  Anal=unsched, Sim=no miss → sim duration may be too short
+         File: uniform-discrete_1.csv
+   1.000        NO      YES        YES       YES  Anal=unsched, Sim=no miss → sim duration may be too short
+         File: uniform-discrete_10.csv
+  Plot saved.
+
+  Deadline miss analysis for automotive ...
+  Plot saved.
+
+  Deadline miss summary:
+       U   DM Miss   EDF Miss      Category
+  ----------------------------------------
+   0.911         0          0     high_util
+   0.916         0          0     high_util
+   0.917         0          0     high_util
+   0.917         0          0     high_util
+   0.919         0          0     high_util
+   0.921         0          0     high_util
+   0.922         0          0     high_util
+   0.934         0          0     high_util
+   0.935         0          0     high_util
+   0.935         0          0     high_util
+   0.944         0          0     high_util
+   0.948         0          0     high_util
+   0.952         0          0     high_util
+   0.958         0          0     high_util
+   0.966         0          0     high_util
+   0.992         0          0     high_util
+   1.000         0          0     high_util
+   1.006        18         54     high_util
+   1.029        70        766     high_util
+   1.040        58        782     high_util
+
+  Deadline miss analysis for uunifast ...
+  Plot saved.
+
+  Deadline miss summary:
+       U   DM Miss   EDF Miss      Category
+  ----------------------------------------
+   0.899         6          0      EDF_wins
+   0.900         3          0      EDF_wins
+   0.900         2          0      EDF_wins
+   0.900         6          0      EDF_wins
+   0.900         2          0      EDF_wins
+   0.900         3          0      EDF_wins
+   0.900        12          0      EDF_wins
+   0.900         6          0      EDF_wins
+   0.900         2          0      EDF_wins
+   0.900         4          0      EDF_wins
+   0.900         6          0      EDF_wins
+   0.900         2          0      EDF_wins
+   0.900         6          0      EDF_wins
+   0.900        12          0      EDF_wins
+   0.900         4          0      EDF_wins
+   0.900         2          0      EDF_wins
+   0.900         8          0      EDF_wins
+   0.900         3          0      EDF_wins
+   0.900        12          0      EDF_wins
+   0.900         4          0      EDF_wins
+
+  Comparing task counts for automotive ...
+    25-task: DM=100.0%  EDF=100.0%
+  Not enough task count folders found, skipping.
+
+  Comparing task counts for uunifast ...
+    25-task: DM=100.0%  EDF=100.0%
+  Not enough task count folders found, skipping.
+
+============================================================
+  ALL DONE!
+  Files generated:
+    Example_1_gantt.png
+    Example_2_gantt.png
+    automotive_deadline_misses.png
+    automotive_scatter.png
+    automotive_schedulability.png
+    automotive_schedulability_validation.png
+    automotive_wcrt_gap.png
+    automotive_wcrt_validation.png
+    combined_comparison.png
+    uunifast_deadline_misses.png
+    uunifast_edf_wins.png
+    uunifast_scatter.png
+    uunifast_schedulability.png
+    uunifast_schedulability_validation.png
+    uunifast_wcrt_gap.png
+    uunifast_wcrt_validation.png
+============================================================

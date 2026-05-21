@@ -1,0 +1,191 @@
+02225 DRTS Mini Project 2 — CBS WCD Analysis & Simulation
+Link rate: 100 Mb/s  idleSlope = sendSlope = 50%  alpha+ = alpha- = 50 Mb/s per class
+
+Running: Scenario 1 — 1 stream per class (1 hop) ...
+
+========================================================================
+  Scenario 1 — 1 stream per class (1 hop)   (1 hop)
+========================================================================
+  Link: 100 Mb/s  |  alpha+ = alpha- = 50% BW per CBS class
+
+  Stream     Class   Size   Period     WCD_CBS   Sim_CBS_max      WCD_SP  Sim_SP_max
+  ---------- ----- ------ --------  ----------  ------------  ----------  ----------
+  S_A1       A        500     1000      104.00       40.00 ✓       80.00       40.00 ✓
+  S_B1       B        400     1000      120.00       72.00 ✓      112.00       72.00 ✓
+  S_E1       BE       300     2000      208.00       96.00 ✓      136.00       96.00 ✓
+
+  Units: sizes in bytes, periods and delays in µs
+  ✓ = simulated max ≤ analytical WCD   ! = violation (check load)
+
+  Bandwidth utilization:  A=4.0%  B=3.2%  BE=1.2%  Total=8.4%
+
+Running: Scenario 2 — 3A, 3B, 2BE (1 hop) ...
+
+========================================================================
+  Scenario 2 — 3A, 3B, 2BE (1 hop)   (1 hop)
+========================================================================
+  Link: 100 Mb/s  |  alpha+ = alpha- = 50% BW per CBS class
+
+  Stream     Class   Size   Period     WCD_CBS   Sim_CBS_max      WCD_SP  Sim_SP_max
+  ---------- ----- ------ --------  ----------  ------------  ----------  ----------
+  S_A1       A        400      500      352.00       32.00 ✓      192.00       32.00 ✓
+  S_A2       A        600      750      336.00      144.00 ✓      192.00       80.00 ✓
+  S_A3       A        200     1000      368.00      296.00 ✓      192.00       96.00 ✓
+  S_B1       B        500      500      376.00      184.00 ✓      280.00      136.00 ✓
+  S_B2       B        350      750      388.00      324.00 ✓      280.00      164.00 ✓
+  S_B3       B        250     1000      396.00      372.00 ✓      280.00      184.00 ✓
+  S_E1       BE       800     1000      432.00      212.00 ✓      440.00      248.00 ✓
+  S_E2       BE      1200     2000      464.00      344.00 ✓      440.00      344.00 ✓
+
+  Units: sizes in bytes, periods and delays in µs
+  ✓ = simulated max ≤ analytical WCD   ! = violation (check load)
+
+  Bandwidth utilization:  A=14.4%  B=13.7%  BE=11.2%  Total=39.3%
+
+Running: Scenario 3 — High-load (1 hop) ...
+
+========================================================================
+  Scenario 3 — High-load (1 hop)   (1 hop)
+========================================================================
+  Link: 100 Mb/s  |  alpha+ = alpha- = 50% BW per CBS class
+
+  Stream     Class   Size   Period     WCD_CBS   Sim_CBS_max      WCD_SP  Sim_SP_max
+  ---------- ----- ------ --------  ----------  ------------  ----------  ----------
+  S_A1       A       1000      800      443.52       80.00 ✓      261.76       80.00 ✓
+  S_A2       A        500     1000      483.52      305.76 ✓      261.76      120.00 ✓
+  S_A3       A        250     2000      503.52      373.76 ✓      261.76      140.00 ✓
+  S_B1       B        800      800      531.52      144.00 ✓      397.76      204.00 ✓
+  S_B2       B        600     1200      547.52      353.76 ✓      397.76      252.00 ✓
+  S_B3       B        300     2000      571.52      442.88 ✓      397.76      276.00 ✓
+  S_E1       BE      1522     2000      663.52      265.76 ✓      569.76      397.76 ✓
+  S_E2       BE        64      500      546.88      378.88 ✓      564.64      402.88 ✓
+  S_E3       BE       500     1500      581.76      418.88 ✓      569.76      442.88 ✓
+
+  Units: sizes in bytes, periods and delays in µs
+  ✓ = simulated max ≤ analytical WCD   ! = violation (check load)
+
+  Bandwidth utilization:  A=15.0%  B=13.2%  BE=9.8%  Total=38.0%
+
+Running: Scenario 4 — Multi-hop (2 hops) ...
+
+========================================================================
+  Scenario 4 — Multi-hop (2 hops)   (2 hops)
+========================================================================
+  Link: 100 Mb/s  |  alpha+ = alpha- = 50% BW per CBS class
+
+  Stream     Class   Size   Period     WCD_CBS   Sim_CBS_max      WCD_SP  Sim_SP_max
+  ---------- ----- ------ --------  ----------  ------------  ----------  ----------
+  S_A1       A        500     1000      208.00       80.00 ✓      160.00       80.00 ✓
+  S_B1       B        400     1000      240.00      144.00 ✓      224.00      144.00 ✓
+  S_E1       BE       300     2000      416.00      192.00 ✓      272.00      192.00 ✓
+
+  Units: sizes in bytes, periods and delays in µs
+  ✓ = simulated max ≤ analytical WCD   ! = violation (check load)
+
+  Bandwidth utilization:  A=4.0%  B=3.2%  BE=1.2%  Total=8.4%
+
+Running: Scenario 5 — BE Starvation Demo (1 hop) ...
+
+========================================================================
+  Scenario 5 — BE Starvation Demo (1 hop)   (1 hop)
+========================================================================
+  Link: 100 Mb/s  |  alpha+ = alpha- = 50% BW per CBS class
+
+  Stream     Class   Size   Period     WCD_CBS   Sim_CBS_max      WCD_SP  Sim_SP_max
+  ---------- ----- ------ --------  ----------  ------------  ----------  ----------
+  S_A1       A       1500     1000      520.00      120.00 ✓      320.00      120.00 ✓
+  S_A2       A       1000     2000      560.00      320.00 ✓      320.00      200.00 ✓
+  S_B1       B       1500     1000      560.00      240.00 ✓      520.00      320.00 ✓
+  S_B2       B       1000     2000      600.00      480.00 ✓      520.00      400.00 ✓
+  S_E1       BE      1000      500      840.00      400.00 ✓      640.00      480.00 ✓
+  S_E2       BE       500     1000      800.00      520.00 ✓      720.00      520.00 ✓
+
+  Units: sizes in bytes, periods and delays in µs
+  ✓ = simulated max ≤ analytical WCD   ! = violation (check load)
+
+  Bandwidth utilization:  A=16.0%  B=16.0%  BE=20.0%  Total=52.0%
+
+========================================================================
+  FORMULA SUMMARY (Cao 2016, with alpha+ = alpha- = 0.5*BW)
+========================================================================
+
+  Notation:
+    C_i    = tx time of S_i = size*8/link_rate,  T_i = period of S_i
+    alpha+ = idleSlope = 0.5*BW  (credit rises while queue waits)
+    alpha- = sendSlope = 0.5*BW  (credit falls while transmitting)
+
+  AVB-A (Cao 2016 WFCS Thm 4 — iterative busy-window):
+    R_A(Si) = C_i + LPI + sum_{j!=i,A} ceil(R/T_j) * C_j * (1+alpha-/alpha+)
+    LPI = max_{B,BE} C_j * (1+alpha+/alpha-)  =  2*C_L_max
+    (LPI: lower frame transmitting -> A credit recovers -> eligible interval delayed)
+
+  AVB-B (Cao 2016 RTNS Thm 3 — iterative busy-window):
+    R_B(Si) = C_i + MPI + sum_{j!=i,B} ceil(R/T_j) * C_j * (1+alpha-/alpha+)
+    MPI = C_BE_max*(1+alpha+/alpha-) + C_A_max  =  2*C_BE_max + C_A_max
+
+  BE (non-preemptive iterative RTA, A+B as strict higher priority):
+    R_BE(Si) = C_i + B_block + credit_block + sum_{A,B} ceil(R/T_j)*C_j
+    B_block      = max C_j over ALL streams  (any frame may be mid-tx)
+    credit_block = (C_A_max + C_B_max)*(alpha-/alpha+)  [CBS debt recovery]
+
+  SP — Strict Priority, no CBS (non-preemptive FP-RTA, FIFO within priority):
+    R_SP(Si) = C_i + B_block
+               + sum_{prio(j)<prio(i)} ceil(R/T_j)*C_j
+               + sum_{prio(j)=prio(i),j!=i} ceil(R/T_j)*C_j
+    B_block = max C_j over ALL streams.  Priority: A(0) > B(1) > BE(2)
+
+  Multi-hop (H identical hops, same-direction streams, line topology):
+      WCD_total(Si) = H * WCRT_per_hop(Si)
+
+
+Generating plots...
+
+  Plot saved: /Users/bigdaddyketan/Desktop/output/Mini_Project2/plots/wcd_cbs_vs_sp.png
+  Plot saved: /Users/bigdaddyketan/Desktop/output/Mini_Project2/plots/cbs_analytical_vs_sim.png
+  Plot saved: /Users/bigdaddyketan/Desktop/output/Mini_Project2/plots/cdf_scenario2.png
+  Plot saved: /Users/bigdaddyketan/Desktop/output/Mini_Project2/plots/credit_trace_scenario1.png
+  Plot saved: /Users/bigdaddyketan/Desktop/output/Mini_Project2/plots/starvation_demo_scenario5.png
+
+Running: Scenario 6 — idleSlope Sensitivity Analysis ...
+
+========================================================================
+  Scenario 6 — idleSlope Sensitivity (Scenario 2 stream set)
+========================================================================
+  Stream     Class   A=75%,B=25%   A=50%,B=50%   A=25%,B=75%
+  ---------- -----  ------------  ------------  ------------
+  S_A1       A            501.33        352.00        416.00  ↓
+  S_A2       A            496.00        336.00        368.00  ↓
+  S_A3       A            549.33        368.00        464.00  ↓
+  S_B1       B            536.00        376.00        408.00  ↑
+  S_B2       B            593.33        388.00        444.00  ↑
+  S_B3       B            596.00        396.00        468.00  ↑
+  S_E1       BE           373.33        432.00        680.00  ~
+  S_E2       BE           405.33        464.00        712.00  ~
+
+  Units: µs.  ↓=decreases with more A bandwidth  ↑=increases
+  Note: alpha_A+ + alpha_B+ = 100% BW in all configs (validity condition met).
+  Trade-off: allocating more bandwidth to A lowers A WCDs but raises B WCDs.
+  Plot saved: /Users/bigdaddyketan/Desktop/output/Mini_Project2/plots/idleslope_sensitivity_scenario6.png
+
+Running: JSON Test Case 1 (paulpop/tsn-test-cases/examples/test_case_1) ...
+
+========================================================================
+  JSON Test Case 1 — ES0↔ES1 via SW1 (2 hops, 100 Mb/s)
+========================================================================
+  Stream       Cls    Size   Period  Deadline     WCD_e2e    OK    Ref_WCRT    Diff%
+  ------------ ---- ------ -------- ---------  ----------  ----  ----------  -------
+  Stream0      A      1012     1000      1000      603.20     ✓      603.20    -0.00%
+  Stream1      A      1012     1000      1000      603.20     ✓      603.20    -0.00%
+  Stream2      A       827     2000      1264      632.80     ✓      632.80    +0.00%
+  Stream3      A       827     2000      1264      632.80     ✓      632.80    +0.00%
+  Stream4      B       626     2000      1880      884.48     ✓      884.48    -0.00%
+  Stream5      B       626     2000      1880      884.48     ✓      884.48    -0.00%
+  Stream6      B      1104     1000      1000      808.00     ✓      808.00    +0.00%
+  Stream7      B      1104     1000      1000      808.00     ✓      808.00    +0.00%
+  Stream8      BE      841     1000      1000     1220.80     ✗    (no ref)        —
+  Stream9      BE      841     1000      1000     1220.80     ✗    (no ref)        —
+
+  Units: bytes / µs.  ✓ = WCD ≤ deadline   ✗ = deadline exceeded
+  Note: BE streams excluded from reference (CBS does not bound BE when alpha_A+ + alpha_B+ = BW).
+
+
